@@ -24,6 +24,7 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -55,6 +56,7 @@ import javafx.util.Duration;
  * @author PETER
  */
 public class StudentPageController implements Initializable, ControlledScreen {
+
     public static String matric = "";
     ScreenController myController;
 
@@ -65,7 +67,7 @@ public class StudentPageController implements Initializable, ControlledScreen {
     /**
      * Initializes the controller class.
      */
-    
+
     @FXML
     private Button btnClose;
     @FXML
@@ -74,16 +76,16 @@ public class StudentPageController implements Initializable, ControlledScreen {
     private Button registerBtn;
     @FXML
     private Button viewResultBtn;
-    
+
     @FXML
     private Button returnBtn;
     @FXML
     private Pane container;
     @FXML
     private Button submitYearBookButton;
-    @FXML 
+    @FXML
     private TextArea lessonQuote;
-    @FXML 
+    @FXML
     private TextArea wisdomQuote;
     @FXML
     private ImageView studentImage;
@@ -96,6 +98,25 @@ public class StudentPageController implements Initializable, ControlledScreen {
     @FXML
     private GridPane gridPane;
     
+    // Variables used when a student profile is clicked in the year bool
+    @FXML
+    private Label studentFullname;
+    @FXML
+    private Label studentClass;
+    @FXML
+    private Label studentPosition;
+    @FXML
+    private Label studentPaneWisdomQuote;
+    @FXML
+    private Label studentPaneLessonQuote;
+    @FXML
+    private Pane studentPane;// this pane will show information for a particular student after the student picture is clicked in the yearbook app
+    @FXML
+    private ImageView studentPaneImageView;
+    
+    @FXML
+    private Label updateTextLabel;
+
     @FXML
     private void closeButtonAction(ActionEvent event) {
         Stage stage = (Stage) btnClose.getScene().getWindow();
@@ -104,7 +125,7 @@ public class StudentPageController implements Initializable, ControlledScreen {
 
     @FXML
     private void hover_in(MouseEvent event) {
-        Button actionBtn = ((Button)event.getSource());
+        Button actionBtn = ((Button) event.getSource());
         ImageView closeImage = (ImageView) actionBtn.getGraphic();
         actionBtn.setEffect(new DropShadow(BlurType.THREE_PASS_BOX, Color.BLACK, 10, 0, 0, 0));
         closeImage.setEffect(new ColorAdjust(0, 0, 0.70, 0));
@@ -112,7 +133,7 @@ public class StudentPageController implements Initializable, ControlledScreen {
 
     @FXML
     private void hover_out(MouseEvent event) {
-        Button actionBtn = ((Button)event.getSource());
+        Button actionBtn = ((Button) event.getSource());
         ImageView closeImage = (ImageView) actionBtn.getGraphic();
         actionBtn.setEffect(null);
         closeImage.setEffect(new ColorAdjust(0, 0, 0, 0));
@@ -146,37 +167,37 @@ public class StudentPageController implements Initializable, ControlledScreen {
     private void drop(MouseEvent event) {
         ((Node) event.getSource()).setCursor(Cursor.OPEN_HAND);
     }
-    
+
     @FXML
     private Label institutionLbl;
-    
+
     @FXML
     private Label departmentLbl;
-    
+
     @FXML
     private Label matricLbl;
-    
+
     @FXML
     private Label fullNameLbl;
-    
+
     @FXML
     private ImageView userImageIV;
-    
+
     @FXML
     private ImageView institutionImageIV;
-    
+
     @FXML
     private ScrollPane resultPane;
-    
+
     private boolean updateState = false;
-    
+
     private String currentSession = "2017/2018";
-    
+
     @FXML
-    private void logout(ActionEvent event){
+    private void logout(ActionEvent event) {
         myController.setScreen(AutoResultProcessing.login);
         Pane loginPageRoot = (Pane) ScreenController.screens.get(AutoResultProcessing.login);
-        ((Label)loginPageRoot.lookup("#label2")).setText("");
+        ((Label) loginPageRoot.lookup("#label2")).setText("");
 //        registrationTb.setItems(null);
         matric = "";
         try {
@@ -189,23 +210,23 @@ public class StudentPageController implements Initializable, ControlledScreen {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb){
+    public void initialize(URL url, ResourceBundle rb) {
         // TODO
         institutionLbl.setPrefWidth(292);
-       
+
         initializeDB();
-        
+
         registerBtnSt = new ScaleTransition(Duration.millis(500));
         registerBtnSt.setFromX(1);
         registerBtnSt.setFromY(1);
         registerBtnSt.setToX(0.8);
         registerBtnSt.setToY(0.8);
         registerBtnSt.interpolatorProperty().set(Interpolator.EASE_IN);
-        
+
         registerBtnFt = new FadeTransition(Duration.millis(400), registerBtn);
         registerBtnFt.setFromValue(1);
         registerBtnFt.setToValue(0);
-       
+
         viewResultBtnFt = new FadeTransition(Duration.millis(300));
         viewResultBtnFt.setFromValue(1);
         viewResultBtnFt.setToValue(0);
@@ -218,7 +239,7 @@ public class StudentPageController implements Initializable, ControlledScreen {
 
         viewResultBtnPt = new ParallelTransition(viewResultBtn, viewResultBtnSt, viewResultBtnFt);
         viewResultBtnPt.interpolatorProperty().set(Interpolator.EASE_IN);
-       
+
         logoutBtnFt = new FadeTransition(Duration.millis(400));
         logoutBtnFt.setFromValue(1);
         logoutBtnFt.setToValue(0);
@@ -232,10 +253,7 @@ public class StudentPageController implements Initializable, ControlledScreen {
         logoutBtnPt = new ParallelTransition(logoutBtn, logoutBtnFt, logoutBtnSt);
         logoutBtnSt.interpolatorProperty().set(Interpolator.EASE_IN);
     }
-    
-    
-    
-    
+
     Connection connection;
 
     public void initializeDB() {
@@ -247,19 +265,21 @@ public class StudentPageController implements Initializable, ControlledScreen {
         } catch (ClassNotFoundException | SQLException ex) {
         }
     }
-    
+
     FadeTransition returnBtnFt, viewResultBtnFt, logoutBtnFt, registrationTbFt, viewYearBookPaneFt, resultPaneFt, registerBtnFt;
     ScaleTransition registerBtnSt, logoutBtnSt, viewYearBookPaneSt, registrationTbSt, viewResultBtnSt;
     TranslateTransition registerBtnTt, returnBtnTt;
     ParallelTransition registerBtnPt, viewResultBtnPt, logoutBtnPt, registrationTbPt, viewYearBookPanePt, returnBtnPt;
-    
+
     @FXML
-    private void registerStudentAnimation(ActionEvent event) throws SQLException{
-        if(registerBtn.getTranslateX() != 315){
+    private void registerStudentAnimation(ActionEvent event) throws SQLException {
+        if (registerBtn.getTranslateX() != 315) {
             currentState = "RegisterButton";
             returnBtn.setVisible(true);
-            
-            if(returnBtn.getLayoutX() != 14) returnBtn.setLayoutX(14);
+
+            if (returnBtn.getLayoutX() != 14) {
+                returnBtn.setLayoutX(14);
+            }
             returnBtnFt = new FadeTransition(Duration.millis(400), returnBtn);
             returnBtnFt.setFromValue(0);
             returnBtnFt.setToValue(1);
@@ -302,7 +322,7 @@ public class StudentPageController implements Initializable, ControlledScreen {
             viewYearBookPanePt.play();
 
 //            registrationTb.setVisible(true);
-           /* registrationTbFt = new FadeTransition(Duration.millis(500));
+            /* registrationTbFt = new FadeTransition(Duration.millis(500));
             registrationTbFt.setFromValue(0);
             registrationTbFt.setToValue(1);
 
@@ -316,10 +336,9 @@ public class StudentPageController implements Initializable, ControlledScreen {
             registrationTbPt.setDelay(Duration.millis(400));
             registrationTbPt.interpolatorProperty().set(Interpolator.EASE_OUT);
             registrationTbPt.play();
-           */
-         // viewCourses(matric);    
-        }
-        else{
+             */
+            // viewCourses(matric);    
+        } else {
             returnBtn.setVisible(false);
             registerBtnPt.setRate(-1);
             registerBtnPt.play();
@@ -341,97 +360,120 @@ public class StudentPageController implements Initializable, ControlledScreen {
         }
     }
     String currentState = "";
-    
-    
-    private void getStudent(String name) throws SQLException{
-    
-        System.out.println("Getting Page For this  "+name);
-        String style = "-fx-text-alignment: justify; -fx-text-fill: white; ";
-        
-        String queryString = "SELECT  DISTINCT image, LessonQuote , WisdomQuote ,StudentIDN FROM yearbook INNER JOIN STUDENT USING(studentIDN) WHERE CONCAT_WS(' ',LastName , FirstName, OtherName) = ? ";
-                    
-                    preparedStatement1 = connection.prepareStatement(queryString);
-                    preparedStatement1.setString(1, name);
-                    
-                    
-                    ResultSet resultSet =  preparedStatement1.executeQuery(); 
-    
-                    while(resultSet.next()){
-                        System.out.println("Record Found for  "+name);
-                        studentQuote.getChildren().clear();
-                       
-                        studentImage.setImage(new Image(resultSet.getBlob("image").getBinaryStream()));
-                        Label lessonLabel = new Label (resultSet.getString("LessonQuote"));
-                        
-                        Label wisdomLabel = new Label (resultSet.getString("WisdomQuote"));
-                        
-                        lessonLabel.setStyle(style);
-                        wisdomLabel.setStyle(style);
-                        
-                        studentQuote.getChildren().add(lessonLabel);
-                        studentQuote.getChildren().add(wisdomLabel);
-                        
-                    }
-    
-        
-    
-    }
-    
-    
-    
-    
-    private void showStudentView(String session) throws SQLException{
-    
-//        ObservableList list = FXCollections.observableArrayList();
-        
-                System.out.println("Populating the Listview with the list of Graduating students in  "+session);
-                    
-                    //String queryString = "SELECT LastName , FirstName, OtherName, image, LessonQuote , WisdomQuote   FROM yearbook INNER JOIN STUDENT USING(studentIDN)  WHERE session = ?  ";
-                    String queryString = "SELECT LastName , FirstName, OtherName, image  FROM STUDENT    ";
-                    
-                    preparedStatement1 = connection.prepareStatement(queryString);
-                    //preparedStatement1.setString(1, session);
-                    
-                    
-                    ResultSet resultSet =  preparedStatement1.executeQuery(); 
-    
-                    int x = 0 , y = 0;
-                    
-                    while(resultSet.next()){
-                        
-                        Image image = new Image(resultSet.getBlob("image").getBinaryStream());
-                        
-                        ImageView imageView = new ImageView(image); 
-                        
-                        imageView.setFitHeight(120);
-                        imageView.setFitWidth(120);
-                        Pane pane = new Pane();
-                        pane.setPrefSize(120, 120);
-                        pane.setPadding(new Insets(5,5,5,5));
-                        pane.getChildren().add(imageView);
-                        
-                        gridPane.add(pane, x++, y);
-                        
-                        if( x == 3){
-                            x = 0;
-                            y++;
-                        }
-                           
-                        //list.add( String.format("%s %s %s", resultSet.getString("LastName"),resultSet.getString("FirstName"),resultSet.getString("OtherName")) );
-                    }
-                    
-                    
-    
 
-    
-    
-    
+    private void getStudent(String name) throws SQLException {
+
+        System.out.println("Getting Page For this  " + name);
+        String style = "-fx-text-alignment: justify; -fx-text-fill: white; ";
+
+        String queryString = "SELECT  DISTINCT image, LessonQuote , WisdomQuote ,StudentIDN FROM yearbook INNER JOIN STUDENT USING(studentIDN) WHERE CONCAT_WS(' ',LastName , FirstName, OtherName) = ? ";
+
+        preparedStatement1 = connection.prepareStatement(queryString);
+        preparedStatement1.setString(1, name);
+
+        ResultSet resultSet = preparedStatement1.executeQuery();
+
+        while (resultSet.next()) {
+            System.out.println("Record Found for  " + name);
+            studentQuote.getChildren().clear();
+
+            studentImage.setImage(new Image(resultSet.getBlob("image").getBinaryStream()));
+            Label lessonLabel = new Label(resultSet.getString("LessonQuote"));
+
+            Label wisdomLabel = new Label(resultSet.getString("WisdomQuote"));
+
+            lessonLabel.setStyle(style);
+            wisdomLabel.setStyle(style);
+
+            studentQuote.getChildren().add(lessonLabel);
+            studentQuote.getChildren().add(wisdomLabel);
+
+        }
+
     }
-    
     
     @FXML
-    private void returnAnimation(ActionEvent event) throws SQLException{
-        switch(currentState){
+    private void hideStudentPane(ActionEvent evt){
+    
+        studentPane.setVisible(false);
+        
+    }
+
+    private void showStudentView(String session) throws SQLException {
+
+//        ObservableList list = FXCollections.observableArrayList();
+        System.out.println("Populating the Listview with the list of Graduating students in  " + session);
+
+        //String queryString = "SELECT LastName , FirstName, OtherName, image, LessonQuote , WisdomQuote   FROM yearbook INNER JOIN STUDENT USING(studentIDN)  WHERE session = ?  ";
+        String queryString = "SELECT LastName , FirstName, OtherName, StudentLevel, image,LessonQuote , WisdomQuote   FROM STUDENT INNER JOIN Yearbook "
+                + "USING(studentidn)";
+
+        preparedStatement1 = connection.prepareStatement(queryString);
+        //preparedStatement1.setString(1, session);
+
+        ResultSet resultSet = preparedStatement1.executeQuery();
+
+        int x = 0, y = 0;
+        int count = 0;
+        while (resultSet.next()) {
+
+            String name = String.format("%s %s %s", resultSet.getString("LastName"), resultSet.getString("FirstName"), resultSet.getString("OtherName"));
+            String level = resultSet.getString("StudentLevel");
+            String lessonQuote = resultSet.getString("lessonQuote");
+            String wisdomQuote = resultSet.getString("WisdomQuote");
+            
+            Image image = new Image(resultSet.getBlob("image").getBinaryStream());
+
+            ImageView imageView = new ImageView(image);
+
+            imageView.setFitHeight(100);
+            imageView.setFitWidth(100);
+            VBox vBox = new VBox();
+            vBox.setPrefSize(120, 120);
+            vBox.setMinHeight(120);
+
+            vBox.setPadding(new Insets(5, 5, 5, 5));
+            vBox.getChildren().add(imageView);
+            vBox.setOnMouseClicked(e -> {
+                System.out.println("Opening Information for  " + name);
+                studentPaneImageView.setImage(image);
+                studentFullname.setText(name);
+                studentClass.setText(level);
+                studentPaneLessonQuote.setText(lessonQuote );
+                studentPaneWisdomQuote.setText(wisdomQuote );
+                //studentPosition
+                studentPane.setVisible(true);
+                e.consume();
+            });
+
+            
+            gridPane.add(vBox, x++, y);
+
+            if (x == 3) {
+                x = 0;
+                y++;
+            }
+            count++;
+            //list.add( String.format("%s %s %s", resultSet.getString("LastName"),resultSet.getString("FirstName"),resultSet.getString("OtherName")) );
+        }
+        int row;
+        if ((count % 3) != 0) {
+            row = (count + (3 - (count % 3))) / 3;
+        } else {
+            row = count / 3;
+        }
+
+        if (count > 3) {
+            gridPane.setPrefHeight(150 * row);
+        }
+
+        //System.out.println("count is" + count);
+        //System.out.println("the resultset is " + row);
+    }
+
+    @FXML
+    private void returnAnimation(ActionEvent event) throws SQLException {
+        switch (currentState) {
             case "RegisterButton":
                 returnBtn.setVisible(false);
                 registerBtnPt.setRate(-1);
@@ -450,7 +492,7 @@ public class StudentPageController implements Initializable, ControlledScreen {
                 viewYearBookPanePt.setRate(-1);
                 viewYearBookPanePt.play();
                 viewYearBookPane.setVisible(false);
-               // viewCourses("");
+                // viewCourses("");
                 break;
             case "ViewResultButton":
                 returnBtnPt.setRate(-1);
@@ -467,16 +509,16 @@ public class StudentPageController implements Initializable, ControlledScreen {
                 viewResultBtnPt.setRate(-1);
                 viewResultBtnPt.play();
                 viewResultBtn.setVisible(true);
-                viewYearBookPanePt.setRate(-1);
-                viewYearBookPanePt.play();
+                //viewYearBookPanePt.setRate(-1);
+                //viewYearBookPanePt.play();
                 viewYearBookPane.setVisible(false);
-                content.setPrefHeight(0);
+                //content.setPrefHeight(0);
                 break;
         }
     }
-    
+
     @FXML
-    private void viewResultAnimation(ActionEvent event) throws SQLException{
+    private void viewResultAnimation(ActionEvent event) throws SQLException {
         currentState = "ViewResultButton";
         returnBtn.setVisible(true);
         returnBtnFt = new FadeTransition(Duration.millis(400), returnBtn);
@@ -487,16 +529,18 @@ public class StudentPageController implements Initializable, ControlledScreen {
         returnBtnFt.setDelay(Duration.millis(200));
         returnBtnFt.setRate(1);
         returnBtnTt = new TranslateTransition(Duration.millis(500));
-        if(returnBtn.getLayoutX() != 486) returnBtn.setLayoutX(486);
+        if (returnBtn.getLayoutX() != 486) {
+            returnBtn.setLayoutX(486);
+        }
         returnBtnTt.setFromY(0);
-        returnBtnTt.setToY(-40);
+        //returnBtnTt.setToY(-40);//put this back 13-9-2018 
         returnBtnTt.interpolatorProperty().set(Interpolator.EASE_OUT);
-        returnBtnPt = new ParallelTransition(returnBtn, returnBtnTt, returnBtnFt, 
+        returnBtnPt = new ParallelTransition(returnBtn, returnBtnTt, returnBtnFt,
                 new Timeline(new KeyFrame(Duration.millis(500), new KeyValue(returnBtn.blendModeProperty(), BlendMode.EXCLUSION))));
         returnBtnPt.play();
-        System.out.println("ReturnBtnLayoutX: "+returnBtn.getLayoutX());
-        System.out.println("ReturnBtnTranslateX: "+returnBtn.getTranslateX());
-        
+        System.out.println("ReturnBtnLayoutX: " + returnBtn.getLayoutX());
+        System.out.println("ReturnBtnTranslateX: " + returnBtn.getTranslateX());
+
         registerBtnPt = new ParallelTransition(registerBtn, registerBtnFt, registerBtnSt);
         registerBtnPt.interpolatorProperty().set(Interpolator.EASE_OUT);
         registerBtnPt.play();
@@ -511,93 +555,97 @@ public class StudentPageController implements Initializable, ControlledScreen {
         resultPaneFt.setFromValue(0);
         resultPaneFt.setToValue(1);
         resultPaneFt.play();
-        
-        submitYearBookButton.setOnAction( e->{
-        
-            if(updateState){
-                
+
+        submitYearBookButton.setOnAction(e -> {
+
+            if (updateState) {
+
                 try {
                     System.out.println("Update in year book");
-                    
+
                     String queryString = "UPDATE yearbook set LessonQuote = ?, WisdomQuote = ? WHERE StudentIDN = ? AND closed = '0'  ";
-                    
+
                     preparedStatement1 = connection.prepareStatement(queryString);
                     preparedStatement1.setString(1, lessonQuote.getText());
                     preparedStatement1.setString(2, wisdomQuote.getText());
                     preparedStatement1.setString(3, matric);
-                    
-                     preparedStatement1.executeUpdate(); 
+
+                    preparedStatement1.executeUpdate();
                 } catch (SQLException ex) {
                     Logger.getLogger(StudentPageController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-           
-            
-            
-            }else{
-                
+
+            } else {
+
                 try {
                     System.out.println("Fresh Entry into year book");
-                    
+
                     String queryString = "INSERT INTO yearbook set LessonQuote = ?, WisdomQuote = ? ,StudentIDN = ?, Session = ?  ";
-                    
+
                     preparedStatement1 = connection.prepareStatement(queryString);
                     preparedStatement1.setString(1, lessonQuote.getText());
                     preparedStatement1.setString(2, wisdomQuote.getText());
                     preparedStatement1.setString(3, matric);
                     preparedStatement1.setString(4, currentSession);
-                    
-                    preparedStatement1.execute(); 
-                        
+
+                    preparedStatement1.execute();
+
                 } catch (SQLException ex) {
                     Logger.getLogger(StudentPageController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-           
-            
-            
+
             }
-        
+            showAndRemoveUpdateSuccessMsg();   
         });
         showGrades(matric);
+
+     
+        
     }
+
+    private void showAndRemoveUpdateSuccessMsg(){
     
+        updateTextLabel.setVisible(true);
+        FadeTransition updateTextLabelFt = new FadeTransition(Duration.millis(700), updateTextLabel);
+        updateTextLabelFt.setFromValue(1);
+        updateTextLabelFt.setToValue(0);
+        updateTextLabelFt.play();
+    
+    }
     private PreparedStatement preparedStatement2;
     double cgpa, cummulativeGradeUnits, cummulativeSemesterUnits;
     String semester;
 
-    
-    
-    @FXML 
+    @FXML
     private VBox content;
 
     public PreparedStatement preparedStatement1;
 
-    private void showGrades(String matricNo) throws SQLException{
+    private void showGrades(String matricNo) throws SQLException {
         semester = "";
         cgpa = 0;
         cummulativeGradeUnits = 0;
         cummulativeSemesterUnits = 0;
         //content.getChildren().clear();
         System.out.println("Get Year book information");
-        
-            String queryString = "SELECT LessonQuote, WisdomQuote FROM yearbook WHERE StudentIDN = ? AND closed = '0' LIMIT 1 ";
 
-            preparedStatement1 = connection.prepareStatement(queryString);
-            preparedStatement1.setString(1, matricNo);
-            
-            ResultSet resultSet = preparedStatement1.executeQuery();
-            
-            String levelString = "";
-            if(resultSet.next()){
-                
-                updateState = true;
-                
-                lessonQuote.setText( resultSet.getString("LessonQuote") );
-                wisdomQuote.setText( resultSet.getString("WisdomQuote") );
-                
-                
-            }
-                
-            
+        String queryString = "SELECT LessonQuote, WisdomQuote FROM yearbook WHERE StudentIDN = ? AND closed = '0' LIMIT 1 ";
+
+        preparedStatement1 = connection.prepareStatement(queryString);
+        preparedStatement1.setString(1, matricNo);
+
+        ResultSet resultSet = preparedStatement1.executeQuery();
+
+        String levelString = "";
+        if (resultSet.next()) {
+
+            updateState = true;
+
+            lessonQuote.setText(resultSet.getString("LessonQuote"));
+            wisdomQuote.setText(resultSet.getString("WisdomQuote"));
+
+        }
+
     }
 
 }

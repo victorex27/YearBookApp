@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import javafx.scene.*?>
@@ -103,12 +104,12 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Pane>
-      <Button fx:id="viewResultBtn" layoutX="314.0" layoutY="266.0" mnemonicParsing="false" onAction="#viewResultAnimation" text="View Result" visible="false">
+      <Button fx:id="viewResultBtn" layoutX="314.0" layoutY="266.0" mnemonicParsing="false" onAction="#viewResultAnimation" text="Fill YearBook">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="registerBtn" layoutX="80.0" layoutY="266.0" mnemonicParsing="false" onAction="#registerStudentAnimation" text="Register">
+      <Button fx:id="registerBtn" layoutX="80.0" layoutY="266.0" mnemonicParsing="false" onAction="#registerStudentAnimation" text="View YearBook">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -132,7 +133,7 @@
             </Tooltip>
          </tooltip>
       </Button>
-      <Button fx:id="logoutBtn" layoutX="194.0" layoutY="358.0" mnemonicParsing="false" onAction="#logout" style="-fx-padding: 6;" text="Logout" visible="false">
+      <Button fx:id="logoutBtn" layoutX="194.0" layoutY="358.0" mnemonicParsing="false" onAction="#logout" style="-fx-padding: 6;" text="Logout">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -144,19 +145,46 @@
             </ImageView>
          </graphic>
       </Button>
-      <ScrollPane fx:id="resultPane" hbarPolicy="NEVER" layoutY="198.0" pannable="true" prefHeight="313.0" prefWidth="549.0" visible="false">
+      <ScrollPane fx:id="resultPane" hbarPolicy="NEVER" layoutY="218.0" pannable="true" prefHeight="293.0" prefWidth="549.0" vbarPolicy="NEVER" visible="false">
          <content>
-            <VBox fx:id="content" prefHeight="385.0" prefWidth="549.0" spacing="5.0">
+            <VBox fx:id="content" prefHeight="385.0" prefWidth="549.0" spacing="5.0" styleClass="background" stylesheets="@css/Login.css">
                <children>
-                  <TextArea fx:id="lessonQuote" prefHeight="140.0" prefWidth="413.0" promptText="Lessons Encountered" wrapText="true" />
-                  <TextArea fx:id="wisdomQuote" layoutX="10.0" layoutY="10.0" prefHeight="154.0" prefWidth="549.0" promptText="Wisdom Derived" />
-                  <Button fx:id="submitYearBookButton" mnemonicParsing="false" text="Submit" />
+                  <Pane prefWidth="60.0">
+                     <children>
+                        <TextArea fx:id="lessonQuote" layoutX="13.0" layoutY="41.0" prefHeight="58.0" prefWidth="493.0" promptText="Lessons Encountered" wrapText="true" />
+                        <Label layoutX="37.0" layoutY="14.0" text="Lessons Encountered" textFill="#cdc9c9">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="100.0">
+                     <children>
+                        <TextArea fx:id="wisdomQuote" layoutX="13.0" layoutY="30.0" prefHeight="70.0" prefWidth="497.0" promptText="Wisdom Derived" wrapText="true" />
+                        <Label layoutX="45.0" layoutY="2.0" text="Wisdom Derived" textFill="#cdc9c9">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="64.0" prefWidth="549.0">
+                     <children>
+                        <Button fx:id="submitYearBookButton" layoutX="386.0" layoutY="3.0" mnemonicParsing="false" text="Submit" />
+                        <Label fx:id="updateTextLabel" layoutX="206.0" layoutY="20.0" text="Update Was Successful" textFill="#cdc9c9" visible="false">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
                </children></VBox>
          </content>
       </ScrollPane>
-      <ScrollPane fx:id="viewYearBookPane" hbarPolicy="NEVER" layoutX="14.0" layoutY="208.0" prefViewportHeight="291.0" prefViewportWidth="522.0" prefWidth="507.0" style="-fx-background-color: transparent;" visible="false">
+      <ScrollPane fx:id="viewYearBookPane" hbarPolicy="NEVER" layoutX="14.0" layoutY="208.0" prefHeight="293.0" prefViewportHeight="291.0" prefViewportWidth="522.0" prefWidth="536.0" style="-fx-background-color: transparent;" visible="false" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0">
          <content>
-            <GridPane fx:id="gridPane" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefWidth="522.0">
+            <GridPane fx:id="gridPane" hgap="5.0" layoutY="900.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="291.0" prefWidth="535.0" styleClass="background" stylesheets="@css/Login.css" vgap="15.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -167,9 +195,81 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
+               <padding>
+                  <Insets top="50.0" />
+               </padding>
             </GridPane>
          </content>
       </ScrollPane>
+      <Pane fx:id="studentPane" layoutX="14.0" layoutY="166.0" prefHeight="336.0" prefWidth="536.0" styleClass="background" stylesheets="@css/Login.css" visible="false">
+         <children>
+            <ImageView fx:id="studentPaneImageView" fitHeight="150.0" fitWidth="157.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="studentFullname" layoutX="278.0" layoutY="51.0" text="Label" textFill="#cdc9c9">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="studentClass" layoutX="278.0" layoutY="77.0" text="Label" textFill="#cdc9c9">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="studentPosition" layoutX="334.0" layoutY="102.0" textFill="#cdc9c9">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Button id="no-color" cancelButton="true" layoutX="434.0" layoutY="14.0" mnemonicParsing="false" onAction="#hideStudentPane" onMouseEntered="#hover_in" onMouseExited="#hover_out" prefHeight="34.0" prefWidth="49.0" style="-fx-background-color: transparent;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView id="close-button" fitHeight="28.0" fitWidth="66.0" layoutX="5.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <image>
+                        <Image url="@img/closeImage-grey.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <VBox layoutX="192.0" layoutY="133.0" maxWidth="338.0" prefWidth="338.0">
+               <children>
+                  <Label text="Lessons Encountered" textFill="#cdc9c9">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="studentPaneLessonQuote" prefWidth="336.0" textFill="#cdc9c9" wrapText="true">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label text="Wisdom Derived" textFill="#cdc9c9">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="studentPaneWisdomQuote" prefWidth="336.0" textFill="#cdc9c9" wrapText="true">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Label layoutX="202.0" layoutY="51.0" text="Name" textFill="#cdc9c9">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="202.0" layoutY="77.0" text="Class" textFill="#cdc9c9">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
    </children>
    <stylesheets>
        <URL value="@css/Login.css" />

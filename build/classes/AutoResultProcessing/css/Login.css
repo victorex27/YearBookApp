@@ -90,7 +90,7 @@
 
 }
 
-.text-field, .text-area {
+.text-field, .text-area{
 	
 	-fx-background-color:
  rgb(255, 255, 255, 0.3), linear-gradient(rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0.8) 50%),
@@ -109,7 +109,7 @@
 
 	-fx-padding: 6 5;
 
-	-fx-background-radius: 40px !important;
+	
 }
 
 

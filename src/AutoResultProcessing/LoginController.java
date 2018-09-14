@@ -141,9 +141,10 @@ public class LoginController extends AnchorPane implements Initializable, Contro
             }
             else if(userId.getText().matches("[\\w]{3,}")){
                 queryString = "Select LevelOfEducation, FirstName, OtherName, LastName, LecturerInstitution, "
-                    + "LecturerDepartment, Lecturer.Image, Institution.Image from teacher, Institution where FirstName = ? "
-                        + "AND LastName = ? AND LecturerInstitution = Institution";
+                    + "LecturerDepartment, Teacher.Image, Institution.Image from teacher, Institution where FirstName = ? "
+                        + "AND LastName = ? AND LecturerInstitution = Institution.ID";
                 statement = connection.prepareStatement(queryString);
+                System.out.printf("username: %s , password: %s", userId.getText(),password.getText());
                 statement.setString(1, userId.getText());
                 statement.setString(2, password.getText());
 
